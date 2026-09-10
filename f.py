@@ -10,8 +10,8 @@ def cadastrar_tarefa():
         'id': len(lista_tarefas)+1,
         'nome': nome,
         'descricao': descricao,
-        'data_criado': datetime.datetime.now(),
-        'data_atualizacao': datetime.datetime.now(),
+        'data_criado': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
+        'data_atualizacao': datetime.datetime.now().strftime("%Y-%m-%d %H:%M"),
         'status': 'Andamento'
     }
     lista_tarefas.append(tarefa.copy())
@@ -21,10 +21,13 @@ def atualizar_tarefa():
    opc=int(input("Digite o id da tarefa que deseja atualizar: "))
    for t in lista_tarefas:
         if t['id'] == opc:
-            t['nome'] = input("Digite o novo nome da tarefa: ")
-            t['descricao'] = input("Digite a nova descrição da tarefa: ")
-            t['data_atualizacao'] = datetime.datetime.now()
-            t['status'] = input("Digite o novo status da tarefa: ")
+            pergunta=input("Deseja atualizar somente o status? (s/n): ").strip().lower()
+            if pergunta == 's':
+                t['status'] = input("Digite o novo status da tarefa: ")
+            else:
+                t['nome'] = input("Digite o novo nome da tarefa: ")
+                t['descricao'] = input("Digite a nova descrição da tarefa: ")
+                t['data_atualizacao'] = datetime.datetime.now().strftime("%Y-%m-%d %H:%M")
             print("Tarefa atualizada com sucesso!")
             return lista_tarefas
 
@@ -41,13 +44,47 @@ def resumo_tarefas():
             print(f"Data de atualização: {t['data_atualizacao']}")
             print(f"Status: {t['status']}")
             print("-" * 30)
+    pergunta=input("Deseja ver apenas as tarefas pendentes? (s/n): ").strip().lower()
+    if pergunta == 's':
+        print("Tarefas pendentes:")
+        for t in lista_tarefas:
+            if t['status'] == 'Andamento':
+                print(f"ID: {t['id']}")
+                print(f"Nome: {t['nome']}")
+                print(f"Descrição: {t['descricao']}")
+                print(f"Data de criação: {t['data_criado']}")
+                print(f"Data de atualização: {t['data_atualizacao']}")
+                print(f"Status: {t['status']}")
+                print("-" * 30)
+    pergunta=input("Deseja ver apenas as tarefas concluídas? (s/n): ").strip().lower()
+    if pergunta == 's':
+        print("Tarefas concluídas:")
+        for t in lista_tarefas:
+            if t['status'] == 'Concluída':
+                print(f"ID: {t['id']}")
+                print(f"Nome: {t['nome']}")
+                print(f"Descrição: {t['descricao']}")
+                print(f"Data de criação: {t['data_criado']}")
+                print(f"Data de atualização: {t['data_atualizacao']}")
+                print(f"Status: {t['status']}")
+                print("-" * 30)
+
+def excluir_tarefa():
+    opc=int(input("Digite o id da tarefa que deseja excluir: "))
+    for t in lista_tarefas:
+        if t['id'] == opc:
+            lista_tarefas.remove(t)
+            print("Tarefa excluída com sucesso!")
+            return lista_tarefas
+    print("Tarefa não encontrada.")
 
 def menu():
     while True:
         print("1 - Cadastrar tarefa")
         print("2 - Atualizar tarefa")
         print("3 - Ver tarefas")
-        print("4 - Sair")
+        print("4 - Excluir tarefa")
+        print("5 - Sair")
         opc = int(input("Digite a opção desejada: "))
         if opc == 1:
             cadastrar_tarefa()
@@ -56,6 +93,8 @@ def menu():
         elif opc == 3:
             resumo_tarefas()
         elif opc == 4:
+            excluir_tarefa()
+        elif opc == 5:
             print("Saindo do programa...")
             break
         with open("tarefas.json", "w") as arquivo:
