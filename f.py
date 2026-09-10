@@ -18,8 +18,14 @@ def cadastrar_tarefa():
     print(lista_tarefas)
 
 def atualizar_tarefa():
-   opc=int(input("Digite o id da tarefa que deseja atualizar: "))
-   for t in lista_tarefas:
+    try:
+      opc=int(input("Digite o id da tarefa que deseja atualizar: "))
+      if opc < 1 or opc > len(lista_tarefas):
+        raise ValueError("Opção inválida. Por favor, digite um número válido.")
+    except ValueError as e:
+        print(f"Opção inválida. Por favor, digite um número. Error: {e}")
+        return
+    for t in lista_tarefas:
         if t['id'] == opc:
             pergunta=input("Deseja atualizar somente o status? (s/n): ").strip().lower()
             if pergunta == 's':
@@ -44,7 +50,12 @@ def resumo_tarefas():
             print(f"Data de atualização: {t['data_atualizacao']}")
             print(f"Status: {t['status']}")
             print("-" * 30)
-    pergunta=input("Deseja ver apenas as tarefas pendentes? (s/n): ").strip().lower()
+    try:
+        pergunta=input("Deseja ver apenas as tarefas pendentes? (s/n): ").strip().lower()
+        if pergunta not in ['s', 'n']:
+            raise ValueError("Opção inválida. Por favor, digite 's' ou 'n'.")
+    except Exception as error:
+        print(f"Error: {error}")
     if pergunta == 's':
         print("Tarefas pendentes:")
         for t in lista_tarefas:
@@ -56,7 +67,12 @@ def resumo_tarefas():
                 print(f"Data de atualização: {t['data_atualizacao']}")
                 print(f"Status: {t['status']}")
                 print("-" * 30)
-    pergunta=input("Deseja ver apenas as tarefas concluídas? (s/n): ").strip().lower()
+    try:
+        pergunta=input("Deseja ver apenas as tarefas concluídas? (s/n): ").strip().lower()
+        if pergunta not in ['s', 'n']:
+            raise ValueError("Opção inválida. Por favor, digite 's' ou 'n'.")
+    except Exception as error:
+            print(f"Error: {error}")
     if pergunta == 's':
         print("Tarefas concluídas:")
         for t in lista_tarefas:
@@ -70,7 +86,13 @@ def resumo_tarefas():
                 print("-" * 30)
 
 def excluir_tarefa():
-    opc=int(input("Digite o id da tarefa que deseja excluir: "))
+    try:
+        opc=int(input("Digite o id da tarefa que deseja excluir: "))
+        if opc < 1 or opc > len(lista_tarefas):
+            raise ValueError("Opção inválida. Por favor, digite um número válido.")
+    except ValueError as e:
+        print(f"Opção inválida. Por favor, digite um número. Error: {e}")
+        return
     for t in lista_tarefas:
         if t['id'] == opc:
             lista_tarefas.remove(t)
@@ -85,7 +107,13 @@ def menu():
         print("3 - Ver tarefas")
         print("4 - Excluir tarefa")
         print("5 - Sair")
-        opc = int(input("Digite a opção desejada: "))
+        try:
+            opc = int(input("Digite a opção desejada: "))
+            if opc < 1 or opc > 5:
+                raise ValueError("Opção inválida. Por favor, digite um número entre 1 e 5.")
+        except Exception as e:
+            print(f"Opção inválida. Por favor, digite um número. Error: {e}")
+            return
         if opc == 1:
             cadastrar_tarefa()
         elif opc == 2:
